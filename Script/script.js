@@ -19,10 +19,14 @@ function SendingToScreen() {
         para.appendChild(node);
         const element = MWin;
         para.className = "FallWord";
+        let a = 0
+        let b = 8;
+        let randomNum = Math.floor((Math.random() * b) + a);
+        para.classList.add('Left' + randomNum);
         para.id = 'Word' + i;
         element.appendChild(para);
         //Showing on screen how many left.
-        upcomingWords.textContent = CountUpcoming - i;
+        upcomingWords.textContent = CountUpcoming - i - 1;
         //Listening Animation End For each elements
         FallWord[i].addEventListener('animationend', (e) => {
             if (e.target.innerHTML !== "") {
@@ -48,20 +52,19 @@ function SendingToScreen() {
             wpmSpeedR.textContent = wpmSpeed.textContent
             completedWordsR.textContent = completedWords.textContent
             Result.style.display = "flex";
-        }, 5000);
+        }, 18000);
     }
 }
 //Making array of random words
 function UpperCaseMakingWordCollection() {
     let a = 0;
-    let b = WordsCollection.length;
+    let b = WordsCollection.length + 1;
     for (let i = 0; i < 50; i++) {
         let RandomNum = Math.floor((Math.random() * b) + a);
         WordDictionary.push(WordsCollection[RandomNum].toUpperCase());
     }
     CountUpcoming = WordDictionary.length;
 }
-
 
 
 let WordsCollection = [
@@ -167,6 +170,7 @@ let completedWordsR = document.getElementById("completedWordsR");
 let wpmSpeed = document.getElementById("wpmSpeed");
 let wpmSpeedR = document.getElementById("wpmSpeedR");
 let Result = document.getElementById("Result");
+let SpaceAlrt = document.getElementById("SpaceAlrt");
 let CountUpcoming = WordDictionary.length;
 let CountCompleted = 0;
 let CountMissed = 0;
@@ -179,11 +183,11 @@ let wordCount = 0;
 
 UpperCaseMakingWordCollection();
 
-
 //Word spliter into keyCode Numbers
 document.addEventListener('keydown', (e) => {
     var name = e.key;
     var code = e.keyCode;
+
     if (NumberOfWord !== WordDictionary.length) {
         if (HoldWordList[NumberOfWord].length !== UserIn.length) {
             let TempArr = HoldWordList[NumberOfWord]; //Making a variable for selecting a word from a big word array.
@@ -192,7 +196,16 @@ document.addEventListener('keydown', (e) => {
                 let str = FallWord[NumberOfWord].innerHTML; //Making a string variable to get text content of word on the main screen.
                 let toUpCase = e.key.toUpperCase(); //Converting UserInputs to upper case.
                 FallWord[NumberOfWord].innerHTML = str.replace(toUpCase, ""); //Sending Updated Text to the selected element each time.
+                FallWord[NumberOfWord].style.color = "#fff"; //Color change when focus on text for fire.
+                setInterval(() => {
+                    if (HoldWordList[NumberOfWord].length === UserIn.length) {
+                        SpaceAlrt.style.display = 'flex';
+                    } else {
+                        SpaceAlrt.style.display = 'none';
+                    }
+                }, 10);
                 NumberOfWordkeyCode++;
+
             } else {
                 CountIncorrectInputs++;
                 incorrectIn.textContent = CountIncorrectInputs; //Update if incorrect input in by the user.
@@ -233,6 +246,9 @@ document.addEventListener('keydown', (e) => {
         }
 
     }
+    if (code === 32) {
+        FallWord[NumberOfWord].style.color = "#fff";
+    }
 
 });
 
@@ -241,7 +257,7 @@ document.addEventListener('keydown', (e) => {
 i = 0;
 let intvr = setInterval(() => {
     SendingToScreen();
-}, 1500);
+}, 1300);
 SendingToScreen();
 window.onkeydown = function (e) {
     return !(e.keyCode == 32);
